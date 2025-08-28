@@ -1,0 +1,205 @@
+
+public class Main {
+    public static void main(String[] args) {
+        FoodITEM sandwich = new FoodITEM("Sandwich", "Snacks");
+        FoodITEM pasta = new FoodITEM("pasta", "Lunch");
+
+        List<FoodITEM> items = new ArrayList<>();
+        items.add(sandwich);
+        FoodLIST prv_foodList = new FoodLIST(items);
+        Menu menu = new Menu(prv_foodList, "lunch", "inactive");
+
+
+        items.add(pasta);
+
+        FoodLIST foodList = new FoodLIST(items);
+        Menu menu_new = new Menu(foodList, "lunch", "active");
+
+
+        Employee emp1 = new Employee("waiter1", "waiter", "1", new Date());
+        Chef chef1 = new Chef("chef1", "Head Chef", "C1", new Date());
+        List<Employee> employees = new ArrayList<>();
+        employees.add(emp1);
+        employees.add(chef1);
+
+
+        Feedback fb = new Feedback("Bob", emp1, 5);
+        List<Feedback> fbs = new ArrayList<>();
+        fbs.add(fb);
+
+        Restaurant rest = new Restaurant("CafeCafe", "Mumbau", "Cafe", "open", employees, menu, fbs);
+
+
+        System.out.println("chef name: " + chef1.name + " designation: " + chef1.designation);
+
+        System.out.println("restaurant employees:");
+        for(Employee e : rest.employees) {
+            System.out.println( "name "+e.name  +" designation:" + e.designation );
+        }
+        System.out.println("restaurant active menu:");
+        for(FoodITEM fi : rest.menu.fooditems.foodList) {
+            System.out.println( fi.name + "  "+ fi.type);
+        }
+
+        rest.recordFeedback(chef1, 5, "Manny");
+        System.out.println("Feedbacks for employees:");
+        rest.listEmpFeedback();
+
+        FoodLIST chefSpecials = chef1.chefSpecs();
+        System.out.println("Chef specials:");
+        for(FoodITEM fi : chefSpecials.foodList) {
+            System.out.println( fi.name + "type:" + fi.type );
+        }
+
+
+    }
+
+    static class Restaurant{
+        String name;
+        String location;
+        String type;
+        String status;
+
+        List<Employee> employees;                // HAS A
+        Menu menu;
+        List<Feedback> feedbacks;
+
+
+        public Restaurant(String name, String location, String type, String status, List<Employee> employees, Menu menu, List<Feedback> feedbacks) {
+            this.name = name;
+            this.location = location;
+            this.type = type;
+            this.status = status;
+            this.employees = employees;
+            this.menu = menu;
+            this.feedbacks = feedbacks;
+        }
+
+        public void listEmpFeedback(){
+            for (Feedback feedback : feedbacks){
+                System.out.println("Employee: "+ feedback.employee.name+ " Rating: "+ feedback.rating);
+            }
+        }
+
+        public void recordFeedback(Employee emp, int rating, String customer) {   //uses -a
+            feedbacks.add(new Feedback(customer, emp, rating));
+        }
+
+    }
+
+    static class Menu{
+        FoodLIST fooditems;                   //Has a
+        String type;
+        String status;
+
+        public Menu(FoodLIST fooditems, String type, String status) {
+            this.fooditems = fooditems;
+            this.type = type;
+            this.status = status;
+        }
+
+        public FoodLIST return_currentMenu(){
+            return fooditems;
+        }
+    }
+
+
+    static class Employee{
+        String name;
+        String designation;
+        String empID;
+        Date joiningDate ;
+
+        public Employee(String name, String designation, String empID, Date joiningDate) {
+            this.name = name;
+            this.designation = designation;
+            this.empID = empID;
+            this.joiningDate = joiningDate;
+        }
+    }
+
+    static class Chef extends Employee {
+        public Chef(String name, String designation, String empID, Date joiningDate) {
+            super(name, designation, empID, joiningDate);
+        }
+
+
+        public FoodLIST chefSpecs() {                         //produces-a
+            List<FoodITEM> chefItems = new ArrayList<>();
+            chefItems.add(new FoodITEM("pie", "dessert"));
+            chefItems.add(new FoodITEM("cake", "dessert"));
+
+            return new FoodLIST(chefItems);
+        }
+
+
+    }
+
+    static class ThirdPartyAppSpecifications{
+        String app_name ;
+        String app_accountID;
+        Employee designated_account_handler;
+        String account_status;
+
+        public ThirdPartyAppSpecifications(String app_name, String app_accountID, Employee designated_account_handler, String account_status) {
+            this.app_name = app_name;
+            this.app_accountID = app_accountID;
+            this.designated_account_handler = designated_account_handler;
+            this.account_status = account_status;
+        }
+
+
+
+    }
+    static class Feedback{
+        String customer ;
+        Employee employee ;
+        Integer rating;
+
+
+
+
+        public Feedback(String customer, Employee employee, Integer rating) {
+            this.customer = customer;
+            this.employee = employee;
+            this.rating = rating;
+        }
+    }
+
+
+    static class Shift {
+        Date start;
+        Date end;
+        Employee employee;   //has a
+
+        public Shift(Date start, Date end, Employee employee) {
+            this.start = start;
+            this.end = end;
+            this.employee = employee;
+        }
+    }
+
+
+    static class FoodITEM {
+        String name;
+        String type;
+
+        public FoodITEM(String name, String type) {
+            this.name = name;
+            this.type = type;
+        }
+    }
+
+    static class FoodLIST {
+        List<FoodITEM> foodList;
+
+        public FoodLIST(List<FoodITEM> foodList) {
+            this.foodList = foodList;
+        }
+    }
+
+}
+
+
+
+
